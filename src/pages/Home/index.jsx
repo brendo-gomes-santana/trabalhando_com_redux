@@ -2,16 +2,20 @@ import styles from "./home.module.css";
 import { Header } from "../../components/header";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { deletarEndereco } from "../../redux/user/slice";
+import { deletarEndereco, fetchUsers } from "../../redux/user/slice";
 
 export function Home() {
-  const { user } = useSelector((rootReducer) => rootReducer.user);
+  const { user, users, loading } = useSelector((rootReducer) => rootReducer.user);
   const dispatch = useDispatch()
 
   function handleDeleteAddress() {
    dispatch(deletarEndereco())
   }
-  
+
+  function handleFetchUsers(){
+    dispatch(fetchUsers())
+  }
+
   return (
     <>
       <Header />
@@ -47,6 +51,19 @@ export function Home() {
               </div>
               </>
             )}
+
+            <hr />
+            <h2>Lista de usuário</h2>
+            <button onClick={handleFetchUsers} >Buscar usuário</button>
+            <br />
+            {loading && <strong>Carregando usuário...</strong>}
+            {!loading && users?.map((user) => {
+              return(
+                <div key={user.id}>
+                  <p>ID: {user.id} | {user.name}</p>
+                </div>
+              )
+            })}
           </div>
         </main>
       </div>
