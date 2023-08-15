@@ -1,17 +1,20 @@
-import styles from './home.module.css'
-import { Header } from '../../components/header'
-import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux';
+import styles from "./home.module.css";
+import { Header } from "../../components/header";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { deletarEndereco } from "../../redux/user/slice";
+
 export function Home() {
   const { user } = useSelector((rootReducer) => rootReducer.user);
-  
-  function handleDeleteAddress(){
-    alert("Endereço deletado com sucesso!")
+  const dispatch = useDispatch()
+
+  function handleDeleteAddress() {
+   dispatch(deletarEndereco())
   }
-  console.log(user)
+  
   return (
     <>
-    <Header/>
+      <Header />
       <div className={styles.container}>
         <nav className={styles.nav}>
           <Link to="/" className={styles.link}>
@@ -28,23 +31,25 @@ export function Home() {
         <main className={styles.content}>
           <div className={styles.message}>
             <h1 className={styles.title}>
-              Olá {user ? user.nome : 'Visitante'}, bem vindo!
+              Olá {user ? user.nome : "Visitante"}, bem vindo!
             </h1>
 
-            <span>Email: {user ? user.email : '....'}</span>
+            <span>Email: {user ? user.email : "...."}</span>
 
+            
+            {user && user.endereco && (
+              <>
+              <strong className={styles.addressLabel}>Endereço atual:</strong>
+              <div className={styles.address}>
+                <p>{user.endereco.local}, n {user.endereco.numero}</p>
 
-            <strong className={styles.addressLabel}>Endereço atual:</strong>
-            <div className={styles.address}>
-              <p>Rua centro, n 123</p>
-              
-              <button onClick={handleDeleteAddress}>Deletar endereço</button>
-            </div>
-
+                <button onClick={handleDeleteAddress}>Deletar endereço</button>
+              </div>
+              </>
+            )}
           </div>
-
         </main>
       </div>
     </>
-  )
+  );
 }
